@@ -1,6 +1,7 @@
 package co.wethinkcode.healthsafe;
 
 import io.javalin.Javalin;
+import io.javalin.json.JavalinJackson;
 import org.apache.commons.csv.CSVRecord;
 import java.util.List;
 import java.util.Map;
@@ -13,10 +14,12 @@ public class IngestionServiceApp {
         Map<String, Map<String, String>> records = new DataCleaner().clean(csvRecords);
         System.out.println(records);
 
-        Javalin app = Javalin.create().start(7030);
+        Javalin app = Javalin.create(
+                config -> config.jsonMapper(new JavalinJackson())
+        ).start(7030);
 
         app.get("/health", ctx -> ctx.result("OK"));
-        app.get("/ward-service", ctx ->
+        app.get("/wards", ctx ->
                 ctx.json(records)
         );
 
