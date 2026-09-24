@@ -1,5 +1,6 @@
 package co.wethinkcode.healthsafe;
 
+import co.wethinkcode.healthsafe.mq.MqConfig;
 import com.google.gson.JsonObject;
 import io.javalin.Javalin;
 import io.javalin.json.JavalinJackson;
@@ -10,6 +11,8 @@ public class WardServiceApp {
         String url = "http://localhost:7030/wards";
         IngestionClient client = new IngestionClient();
         JsonObject allWards = client.getIngestionData(url);
+        MqConfig mq = new MqConfig();
+        mq.subscribe();
 
         Javalin app = Javalin.create(
                 config -> config.jsonMapper(new JavalinJackson())

@@ -41,20 +41,7 @@ public class IngestionClient {
 //            return "There was a problem while getting the data: " + e;
             throw new RuntimeException("There was a problem while getting the data: " + e);
         }
-
     }
-
-    // This method might not be needed, consider removing it.
-//    public JsonObject getAllWards(String url) {
-//        JsonObject wardData = getIngestionData(url);
-//        System.out.println("Ward Date: " + wardData);
-//        JsonObject wards = new JsonObject();
-//        for (Map.Entry<String, JsonElement> ward: wardData.entrySet()) {
-//            wards.add(ward.getKey(), ward.getValue().getAsJsonObject().get("department"));
-//        }
-//        System.out.println("Wards: " + wards);
-//        return wards;
-//    }
 
     public String getWard(String url, String id) {
         JsonObject wardData = getIngestionData(url);

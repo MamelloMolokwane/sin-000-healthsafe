@@ -46,7 +46,6 @@ public class WardClient {
     // 2. Count the amount of times the wing and department show up.
     public Map<String, Integer> countWingAndDepartments(JsonObject jsonObject) {
         Map<String, Integer> occurrence = new HashMap<>();
-
         for (Map.Entry<String, JsonElement> ward: jsonObject.entrySet()) {
             String wingAndDepartment = ward.getValue().getAsJsonObject().get("wing").getAsString()
                     + " " + ward.getValue().getAsJsonObject().get("department").getAsString();
@@ -58,7 +57,6 @@ public class WardClient {
                 occurrence.put(wingAndDepartment, 1);
             }
         }
-
         return occurrence;
     }
 
