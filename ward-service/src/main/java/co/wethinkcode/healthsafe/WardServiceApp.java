@@ -5,14 +5,18 @@ import com.google.gson.JsonObject;
 import io.javalin.Javalin;
 import io.javalin.json.JavalinJackson;
 
+import java.util.Map;
+
 public class WardServiceApp {
 
     public static void main(String[] args) {
         String url = "http://localhost:7030/wards";
         IngestionClient client = new IngestionClient();
         JsonObject allWards = client.getIngestionData(url);
+
         MqConfig mq = new MqConfig();
         mq.subscribe();
+        checkEquipment(mq);
 
         Javalin app = Javalin.create(
                 config -> config.jsonMapper(new JavalinJackson())
@@ -31,6 +35,22 @@ public class WardServiceApp {
         
         // TODO (Provides lists of wards and departments.)
         // Add domain endpoints for ward-service here.
+    }
+
+    private static void checkEquipment(MqConfig mq) {
+        Map<String, Map<String, Boolean>> equipment = Map.of(
+                "W-01", Map.of("Ventilator", true, "Heart Monitor", false),
+                "W-02", Map.of("Ventilator", false)
+        );
+
+        for (Map.Entry<String, Map<String, Boolean>> ward : equipment.entrySet()) {
+            for (Map.Entry<String, Boolean> item : ward.getValue().entrySet()) {
+                if (item.getValue()) {
+                    String message = ward.getKey() + ": " + item.getKey() + " is faulty";
+                    mq.publish(message);
+                }
+            }
+        }
     }
 }
 
