@@ -12,7 +12,7 @@ public class IngestionServiceApp {
         String csvFile = "wards-outdated.csv";
         List<CSVRecord> csvRecords = new ReadCSV().read(csvFile);
         Map<String, Map<String, String>> records = new DataCleaner().clean(csvRecords);
-        System.out.println(records);
+        prettyPrint(records);
 
         Javalin app = Javalin.create(
                 config -> config.jsonMapper(new JavalinJackson())
@@ -23,8 +23,19 @@ public class IngestionServiceApp {
                 ctx.json(records)
         );
 
-        // TODO: read and clean src/main/resources/wards-outdated.csv (wards, wings, specialist departments data —
-        // trim whitespace, fix casing, normalize dates/booleans) and expose the
-        // cleaned records here for the other services to consume.
+    }
+
+    private static void prettyPrint(Map<String, Map<String, String>> records) {
+        System.out.println("========== CLEANED WARD DATA ==========");
+
+        records.forEach((ward, details) -> {
+            System.out.println("\n[" + ward + "]");
+
+            details.forEach((key, value) ->
+                    System.out.printf("  %-20s : %s%n", key, value)
+            );
+        });
+
+        System.out.println("=======================================");
     }
 }
