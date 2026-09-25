@@ -19,19 +19,6 @@ public final class MqConfig {
         connectionFactory = new ActiveMQConnectionFactory(BROKER_URL);
     }
 
-    public void publish(String message) {
-        try (Connection connection = connectionFactory.createConnection()) {
-            connection.start();
-            Session session = connection.createSession();
-            Destination destination = session.createQueue(QUEUE);
-            MessageProducer producer = session.createProducer(destination);
-            TextMessage textMessage = session.createTextMessage(message);
-            producer.send(textMessage);
-        } catch (JMSException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public void subscribe() {
         try {
             Connection connection = connectionFactory.createConnection();
